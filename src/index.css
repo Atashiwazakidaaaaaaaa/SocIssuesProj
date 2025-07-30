@@ -1,0 +1,303 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Text scaling for accessibility */
+    --text-scale: 1;
+    
+    /* Kid-friendly vibrant color palette */
+    --background: 210 100% 97%;
+    --foreground: 230 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 230 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 15% 15%;
+
+    /* Bright, engaging primary colors */
+    --primary: 220 100% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 220 100% 75%;
+
+    --secondary: 280 100% 70%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 94%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 45 100% 60%;
+    --accent-foreground: 230 15% 15%;
+
+    /* Fun additional colors for gamification */
+    --success: 140 60% 50%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 30 100% 55%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214.3 31.8% 88%;
+    --input: 0 0% 100%;
+    --ring: 220 100% 55%;
+
+    /* Gradients for magical effects */
+    --gradient-primary: linear-gradient(135deg, hsl(220 100% 55%), hsl(280 100% 70%));
+    --gradient-success: linear-gradient(135deg, hsl(140 60% 50%), hsl(160 60% 50%));
+    --gradient-warm: linear-gradient(135deg, hsl(45 100% 60%), hsl(30 100% 55%));
+    
+    /* Shadows for depth */
+    --shadow-magical: 0 10px 30px -5px hsl(220 100% 55% / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(220 100% 55% / 0.15);
+    --shadow-button: 0 6px 20px -6px hsl(280 100% 70% / 0.4);
+
+    /* Animations */
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius: 1rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html, body, #root {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Responsive Layout Classes */
+.fit-screen {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.fit-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Better Text Scaling for Accessibility */
+.text-content {
+  font-size: calc(1rem * var(--text-scale));
+}
+
+.text-content-sm {
+  font-size: calc(0.875rem * var(--text-scale));
+}
+
+.text-content-lg {
+  font-size: calc(1.125rem * var(--text-scale));
+}
+
+.text-content-xl {
+  font-size: calc(1.25rem * var(--text-scale));
+}
+
+.text-content-2xl {
+  font-size: calc(1.5rem * var(--text-scale));
+}
+
+.text-content-3xl {
+  font-size: calc(1.875rem * var(--text-scale));
+}
+
+.text-content-4xl {
+  font-size: calc(2.25rem * var(--text-scale));
+}
+
+.text-content-5xl {
+  font-size: calc(3rem * var(--text-scale));
+}
+
+.text-content-6xl {
+  font-size: calc(3.75rem * var(--text-scale));
+}
+
+/* Responsive Text Classes that respect --text-scale */
+.text-responsive-sm {
+  font-size: calc(clamp(0.75rem, 2vw, 0.875rem) * var(--text-scale));
+}
+
+.text-responsive-base {
+  font-size: calc(clamp(0.875rem, 2.5vw, 1rem) * var(--text-scale));
+}
+
+.text-responsive-lg {
+  font-size: calc(clamp(1rem, 3vw, 1.25rem) * var(--text-scale));
+}
+
+.text-responsive-xl {
+  font-size: calc(clamp(1.125rem, 3.5vw, 1.5rem) * var(--text-scale));
+}
+
+.text-responsive-2xl {
+  font-size: calc(clamp(1.25rem, 4vw, 2rem) * var(--text-scale));
+}
+
+.text-responsive-3xl {
+  font-size: calc(clamp(1.5rem, 5vw, 2.5rem) * var(--text-scale));
+}
+
+.text-responsive-4xl {
+  font-size: calc(clamp(2rem, 6vw, 3rem) * var(--text-scale));
+}
+
+.text-responsive-huge {
+  font-size: calc(clamp(2.5rem, 8vw, 4rem) * var(--text-scale));
+}
+
+/* Accessibility Styles */
+.high-contrast {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --primary: 240 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 85%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 0 0% 90%;
+  --muted-foreground: 0 0% 20%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --warning: 45 100% 50%;
+  --warning-foreground: 0 0% 0%;
+  --success: 120 100% 25%;
+  --success-foreground: 0 0% 100%;
+  --border: 0 0% 50%;
+}
+
+.high-contrast * {
+  border-color: hsl(var(--border)) !important;
+  text-shadow: none !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+.reduced-motion,
+.reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Theme Variations */
+[data-theme="colorblind"] {
+  --primary: 210 100% 45%;
+  --warning: 35 100% 50%;
+  --success: 150 100% 35%;
+  --destructive: 15 100% 50%;
+}
+
+[data-theme="dark"] {
+  --background: 0 0% 8%;
+  --foreground: 0 0% 95%;
+  --card: 0 0% 12%;
+  --card-foreground: 0 0% 95%;
+  --primary: 210 100% 70%;
+  --primary-foreground: 0 0% 8%;
+}
+
+[data-theme="light"] {
+  --background: 0 0% 98%;
+  --foreground: 0 0% 5%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 5%;
+  --primary: 210 100% 40%;
+  --primary-foreground: 0 0% 98%;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 3px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* High contrast focus for better visibility */
+.high-contrast *:focus-visible {
+  outline: 4px solid hsl(0 0% 0%);
+  outline-offset: 3px;
+  background-color: hsl(45 100% 80%);
+}
