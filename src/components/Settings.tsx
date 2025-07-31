@@ -24,7 +24,6 @@ interface SettingsData {
   // Learning Support
   showPhonetics: boolean;
   visualCues: boolean;
-  hapticFeedback: boolean;
 }
 
 const defaultSettings: SettingsData = {
@@ -36,7 +35,6 @@ const defaultSettings: SettingsData = {
   language: 'filipino',
   showPhonetics: false,
   visualCues: true,
-  hapticFeedback: false
 };
 
 export const Settings = ({ onBack }: SettingsProps) => {
@@ -269,26 +267,14 @@ export const Settings = ({ onBack }: SettingsProps) => {
                     aria-label="I-on ang visual cues"
                   />
                 </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <label className="text-responsive-sm font-medium">Haptic Feedback</label>
-                    <p className="text-xs text-muted-foreground">Vibration sa mobile devices</p>
-                  </div>
-                  <Switch
-                    checked={settings.hapticFeedback}
-                    onCheckedChange={(checked) => updateSetting('hapticFeedback', checked)}
-                    aria-label="I-on ang haptic feedback"
-                  />
-                </div>
               </div>
             </Card>
 
             {/* Test Area */}
             <Card className="p-4 shadow-card-hover text-center lg:col-span-2">
               <h3 className="text-responsive-lg font-bold mb-3">🧪 Test mo ang Settings</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="text-center">
                   <p className="mb-3 text-responsive-sm">Pakinggan kung tama na ang tunog:</p>
                   <Button 
                     variant="magic" 
@@ -311,25 +297,6 @@ export const Settings = ({ onBack }: SettingsProps) => {
                     className="px-6 py-3"
                   >
                     🔊 Test Audio
-                  </Button>
-                </div>
-                <div>
-                  <p className="mb-3 text-responsive-sm">I-testing ang vibration:</p>
-                  <Button 
-                    variant="magic" 
-                    onClick={() => {
-                      if (settings.hapticFeedback && 'vibrate' in navigator) {
-                        navigator.vibrate([100, 50, 100, 50, 200]);
-                      } else if (!('vibrate' in navigator)) {
-                        alert('Haptic feedback hindi available sa browser mo');
-                      } else {
-                        alert('I-enable muna ang haptic feedback sa settings');
-                      }
-                    }}
-                    className="px-6 py-3"
-                    disabled={!settings.hapticFeedback && !('vibrate' in navigator)}
-                  >
-                    📳 Test ng Vibration
                   </Button>
                 </div>
               </div>
