@@ -138,7 +138,7 @@ export const translations: Record<LanguageCode, Translation> = {
     level: "Level",
     stars: "Stars",
     hearts: "Hearts",
-    start: "Simula",
+    start: "Start",
     continue: "Tuloy",
     complete: "Tapos",
     

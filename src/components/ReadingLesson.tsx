@@ -86,7 +86,7 @@ const phoneticMap: { [key: string]: string } = {
 
 export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLessonProps) => {
   const { t, language } = useTranslation();
-  const [phase, setPhase] = useState<'learn' | 'practice'>('learn');
+  const [phase, setPhase] = useState<'learn' | 'practice' | 'completed'>('learn');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
@@ -94,6 +94,7 @@ export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLesson
   const [hearts, setHearts] = useState(3);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [finalScore, setFinalScore] = useState(0);
   const [settings, setSettings] = useState({
     speechRate: 0.8,
     speechVolume: 0.9,
@@ -159,6 +160,9 @@ export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLesson
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handleWordComplete();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          onExit();
         }
       } else if (phase === 'practice' && !showResult) {
         if (e.key >= '1' && e.key <= '3') {
@@ -167,6 +171,17 @@ export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLesson
             e.preventDefault();
             handleAnswerSelect(answerIndex);
           }
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          onExit();
+        }
+      } else if (phase === 'completed') {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onComplete(finalScore);
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          onExit();
         }
       }
     };
@@ -219,7 +234,10 @@ export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLesson
         setSelectedAnswer(null);
         setShowResult(false);
       } else {
-        setTimeout(() => onComplete(score + (isCorrect ? 1 : 0)), 1000);
+        const completionScore = score + (isCorrect ? 1 : 0);
+        setFinalScore(completionScore);
+        setPhase('completed');
+        setProgress(100);
       }
     }, 1500);
   };
@@ -274,7 +292,7 @@ export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLesson
         <div className="max-w-xl mx-auto h-full flex flex-col">
           {/* Enhanced Header with Progress */}
           <div className="flex items-center justify-between mb-3 flex-shrink-0">
-            <Button variant="outline" onClick={onExit} size="sm" className="hover:scale-110 transition-transform bg-white/90 border-white text-purple-700 hover:bg-white">
+            <Button variant="outline" onClick={onExit} size="sm" className="hover:scale-110 transition-transform bg-white/90 border-white text-purple-700 hover:bg-white focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-75">
               <ArrowLeft className="h-4 w-4 mr-2" />
               {t.back}
             </Button>
@@ -369,9 +387,93 @@ export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLesson
                     />
                   ))}
                 </div>
+                
+                {/* Keyboard instructions */}
+                <div className="text-center text-white/80 text-sm bg-black/20 rounded-lg p-2 border border-white/20 mt-4">
+                  <p className="font-semibold mb-1">⌨️ Controls:</p>
+                  <p>Enter/Space: Got it! | Escape: Back | 🔊: Click to hear</p>
+                </div>
               </div>
             </Card>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Completion Phase - Show results before moving to celebration
+  if (phase === 'completed') {
+    return (
+      <div className="fit-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 p-4 flex items-center justify-center">
+        <div className="max-w-2xl w-full">
+          <Card className="p-8 text-center bg-white/95 backdrop-blur-lg shadow-2xl border-4 border-yellow-400 rounded-3xl">
+            <div className="text-8xl mb-6 animate-bounce">🎉</div>
+            <h1 className="text-6xl font-bold text-orange-600 mb-4">LESSON COMPLETE!</h1>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
+                <div className="text-4xl mb-2">📊</div>
+                <div className="text-3xl font-bold">{Math.round((finalScore / currentQuestions.length) * 100)}%</div>
+                <div className="text-lg">Score</div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
+                <div className="text-4xl mb-2">⭐</div>
+                <div className="text-3xl font-bold">{finalScore}</div>
+                <div className="text-lg">Correct Answers</div>
+              </div>
+              
+              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
+                <div className="text-4xl mb-2">🪙</div>
+                <div className="text-3xl font-bold">+25</div>
+                <div className="text-lg">Gold Earned</div>
+              </div>
+            </div>
+            
+            {finalScore >= Math.ceil(currentQuestions.length * 0.75) ? (
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-400 rounded-xl p-4 mb-6">
+                <div className="text-2xl text-green-700 font-bold">🌟 Excellent Work! 🌟</div>
+                <p className="text-green-600">You mastered this lesson!</p>
+              </div>
+            ) : finalScore >= Math.ceil(currentQuestions.length * 0.5) ? (
+              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-400 rounded-xl p-4 mb-6">
+                <div className="text-2xl text-orange-700 font-bold">👍 Good Job! 👍</div>
+                <p className="text-orange-600">Keep practicing to improve!</p>
+              </div>
+            ) : (
+              <div className="bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-400 rounded-xl p-4 mb-6">
+                <div className="text-2xl text-blue-700 font-bold">💪 Keep Learning! 💪</div>
+                <p className="text-blue-600">Practice makes perfect!</p>
+              </div>
+            )}
+            
+            <div className="flex gap-4 justify-center">
+              <Button
+                onClick={() => onComplete(finalScore)}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-75"
+                autoFocus
+              >
+                🎉 Continue Adventure!
+              </Button>
+              
+              <Button
+                onClick={() => {
+                  console.log("User chose to skip celebration, going to dashboard");
+                  onExit();
+                }}
+                variant="outline"
+                className="bg-white hover:bg-gray-50 text-gray-700 font-bold py-4 px-8 rounded-xl text-xl border-2 border-gray-300 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-75"
+              >
+                🏠 Skip to Dashboard
+              </Button>
+            </div>
+            
+            {/* Keyboard instructions */}
+            <div className="text-center text-gray-600 text-sm bg-gray-100 rounded-lg p-3 border border-gray-200 mt-6">
+              <p className="font-semibold mb-1">⌨️ Controls:</p>
+              <p>Enter/Space: Continue | Escape: Back to Dashboard</p>
+            </div>
+          </Card>
         </div>
       </div>
     );
@@ -385,7 +487,7 @@ export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLesson
       <div className="max-w-2xl mx-auto h-full flex flex-col">
         {/* Enhanced Header with Progress */}
         <div className="flex items-center justify-between mb-3 flex-shrink-0">
-          <Button variant="outline" onClick={onExit} size="sm" className="hover:scale-110 transition-transform bg-white/90 border-white text-blue-700 hover:bg-white">
+          <Button variant="outline" onClick={onExit} size="sm" className="hover:scale-110 transition-transform bg-white/90 border-white text-blue-700 hover:bg-white focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-75">
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t.back}
           </Button>
@@ -466,6 +568,12 @@ export const ReadingLesson = ({ onComplete, onExit, playerLevel }: ReadingLesson
                   </Button>
                 );
               })}
+            </div>
+            
+            {/* Keyboard instructions for practice phase */}
+            <div className="text-center text-white/80 text-sm bg-black/20 rounded-lg p-2 border border-white/20 mt-4">
+              <p className="font-semibold mb-1">⌨️ Controls:</p>
+              <p>1-3: Select answer | Escape: Back</p>
             </div>
             </Card>
         </div>
